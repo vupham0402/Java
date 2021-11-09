@@ -1,0 +1,76 @@
+<!doctype html>
+<head>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1024.0.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+//Bucket Configurations
+
+ var bucketName = "eyeprogpotest";
+ var bucketRegion = "us-east-2";
+ var IdentityPoolId = "us-east-2:419354ac-8733-4509-ba20-15c4f93bc74e";
+
+ AWS.config.update({
+                region: bucketRegion,
+                credentials: new AWS.CognitoIdentityCredentials({
+                IdentityPoolId: IdentityPoolId
+                })
+            });
+
+            var s3 = new AWS.S3({
+                apiVersion: '2006-03-01',
+                params: {Bucket: bucketName}
+        });
+</script>
+</head>
+<body>
+    <!-- A functional html code-->
+    <div>
+        <label for="organization">Enter your organization:</label>
+        <input type="text" id="organization" required>
+    </div>
+    <div>
+        <label for="email">Enter your email:</label>
+        <input type="email" id="email" required>
+    </div>
+    <div>
+        <input type="file" id="fileUpload" required>
+    </div>
+
+    <div>
+        <button onclick="s3upload();">Submit</button>
+    </div>
+
+    <script type="text/javascript">
+
+      function s3upload() {
+        var files = document.getElementById("fileUpload").files;
+        if (!files.length) {
+            return alert("Please choose a file to upload first.");
+        }
+        else {
+            var file = files[0];
+            var fileName = file.name;
+            var fileUploadName = document.getElementById('organization').value + '_' + document.getElementById('email').value + '_' + fileName;
+            // Use S3 ManagedUpload class as it supports multipart uploads
+            var upload = new AWS.S3.ManagedUpload({
+                params: {
+                    Bucket: bucketName,
+                    Key: fileUploadName,
+                    Body: file,
+                }
+            });
+            var promise = upload.promise();
+            promise.then(
+                function(data) {
+                    alert("Successfully uploaded photo.");
+                },
+                function(err) {
+                    return alert("There was an error uploading your file: ", err.message);
+                }
+            );
+        }
+    }
+    </script>
+</body>
+</html>
