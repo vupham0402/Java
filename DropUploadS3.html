@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+<script type="text/javascript" src="https://sdk.amazonaws.com/js/aws-sdk-2.1024.0.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+//Bucket Configurations
+
+ var bucketName = "eyeprogpotest";
+ var bucketRegion = "us-east-2";
+ var IdentityPoolId = "us-east-2:419354ac-8733-4509-ba20-15c4f93bc74e";
+
+ AWS.config.update({
+                region: bucketRegion,
+                credentials: new AWS.CognitoIdentityCredentials({
+                IdentityPoolId: IdentityPoolId
+                })
+            });
+
+            var s3 = new AWS.S3({
+                apiVersion: '2006-03-01',
+                params: {Bucket: bucketName}
+        });
+</script>
+
+<div id="container">
+  <div>
+    <label for="organization">Enter your organization:</label><br>
+    <input type="text" id="organization" required=""><br>
+    <label for="email">Enter your email:</label><br>
+    <input type="email" id="email" required=""><br>
+   </div>
+  <div id="drop-zone" class="drag-area">
+    <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+    <header>Drag & Drop to Upload File</header>
+    <span id="span">OR</span>
+    <button id="button">Browse File</button>
+    <input id="fileUpload" type="file" name="file" hidden><br>
+    <div id="content">Your File</div><br>
+    <button id="button" onclick="s3upload();">Upload</button>
+  </div>
+</div>
