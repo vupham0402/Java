@@ -5,6 +5,7 @@ const dropArea = document.querySelector(".drag-area"),
 dragText = dropArea.querySelector("header"),
 button = dropArea.querySelector("button"),
 input = dropArea.querySelector("input");
+flag = 0;
 let file;
 let files;
 const reader = new FileReader();
@@ -20,6 +21,7 @@ input.addEventListener("change", function(){
   dropArea.classList.add("active");
   content.innerHTML = file.name;
   dragText.textContent = "Ready to Upload File";
+  flag = 1;
 });
 
 if (window.FileList && window.File) {
@@ -40,12 +42,19 @@ if (window.FileList && window.File) {
     file = files[0];
     content.innerHTML = file.name;
     dragText.textContent = "Ready to Upload File";
+    flag = 1;
   }); 
   
   function s3upload() {
-    if (!files.length) {
+    if (flag === 0) {
       return alert("Please choose a file to upload first.");
     }
+    else if (org.value === '') {
+      return alert("Please enter your organization.");
+    } 
+    else if (email.value === '') {
+      return alert("Please enter your email address.");
+    }    
     else {
       var fileName = file.name;
       var fileUploadName = document.getElementById('organization').value + '_' + document.getElementById('email').value + '_' + fileName;
@@ -61,6 +70,10 @@ if (window.FileList && window.File) {
       promise.then(
         function(data) {
           alert("Successfully uploaded your file.");
+           content.innerHTML = "Your File";
+           dragText.textContent = "Drag & Drop";
+           org.value = '';
+           email.value = '';
         },
         function(err) {
           return alert("There was an error uploading your file: ", err.message);
