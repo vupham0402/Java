@@ -2,6 +2,8 @@
 const dropZone = document.getElementById('drop-zone');
 const content = document.getElementById('content');
 const dropArea = document.querySelector(".drag-area"),
+var org = document.getElementById('organization');
+var email = document.getElementById('email');
 dragText = dropArea.querySelector("header"),
 button = dropArea.querySelector("button"),
 input = dropArea.querySelector("input");
